@@ -18,6 +18,11 @@ variable "zone" {
 
 }
 
+variable "region" {
+  description = "The region to create the resources in."
+  type        = string
+}
+
 variable "image" {
   type        = string
   description = "image type"

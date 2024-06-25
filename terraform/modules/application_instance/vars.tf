@@ -8,6 +8,11 @@ variable "region" {
   type        = string
 }
 
+variable "zone" {
+  description = "The availability zone to create the sample compute instances in. Must within the region specified in 'var.region'"
+  type        = string
+}
+
 variable "enable_ssl" {
   description = "Set to true to enable ssl. If set to 'true', you will also have to provide 'var.custom_domain_name'."
   type        = bool
