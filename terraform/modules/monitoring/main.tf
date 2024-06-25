@@ -5,7 +5,7 @@ resource "google_compute_instance" "grafana" {
   tags         = ["grafana"]
   allow_stopping_for_update = true
   service_account {
-    email  = "jenkins@capybarageocity.iam.gserviceaccount.com"
+    email  = "dev-42@capybara-dev-42069.iam.gserviceaccount.com"
     scopes = ["cloud-platform"]
   }
   boot_disk {

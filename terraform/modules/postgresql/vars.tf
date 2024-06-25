@@ -25,3 +25,14 @@ variable "env" {
   type        = string
   description = "Current environment to deploy"
 }
+
+variable "project" {
+  type        = string
+  description = "id of project"
+}
+
+variable "zone" {
+  type        = string
+  description = "region for DB"
+  default     = "europe-west3-c"
+}
