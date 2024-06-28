@@ -3,6 +3,9 @@ pipeline {
     agent any
     parameters {
         choice(name: 'ENV', choices: ['dev', 'stage', 'prod'], description: 'Deployment environment')
+        choice(name: 'REGION', choices: ['europe', 'us'], description: 'Select the region')
+        choice(name: 'ZONE', choices: ['west3', 'east5'], description: 'Select the zone')
+        string(name: 'PROJECT_NAME', defaultValue: 'geo', description: 'Project name')
         string(name: 'JFROG_PORT', defaultValue: '8081', description: 'Jfrog host port')
         string(name: 'JFROG_REPO', defaultValue: 'geocit-dev-maven-local', description: 'Jfrog repository name')
         string(name: 'JFROG_BUILD_NUMBER', defaultValue: '16', description: 'Application build number')
@@ -10,9 +13,8 @@ pipeline {
     }
     environment {
         //GCP env
-        GCP_PROJECT = 'capybarageocity'//?
-        GCP_ZONE = 'europe-west3-c'//?
-        GCP_FILE = '/var/lib/jenkins/application_default_credentials.json'//?
+        GCP_PROJECT = params.PROJECT_NAME
+        GCP_ZONE = params.ZONE
         MONITORING_IP = sh(script: "gcloud compute instances list --format=json | jq '.[] | select(.name|contains(\"monitoring\")) | .networkInterfaces[].networkIP'", returnStdout: true).trim()
         //Jfrog env
         JFROG_HOST = sh(script: "gcloud compute instances list --format=json | jq '.[] | select(.name|contains(\"artifactory\")) | .networkInterfaces[].accessConfigs[].natIP'", returnStdout: true).trim()
