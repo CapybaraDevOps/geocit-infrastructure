@@ -39,7 +39,7 @@ pipeline {
             steps {
                 withCredentials([file(credentialsId: "${ENVIRONMENT}", variable: 'GOOGLE_CREDENTIALS')]) {
                     dir('terraform/environments') {
-                        sh 'make deatroy'
+                        sh 'make destroy'
                     }
                 }
             }
