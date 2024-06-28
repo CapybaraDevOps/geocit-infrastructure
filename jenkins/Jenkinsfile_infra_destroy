@@ -23,7 +23,7 @@ pipeline {
                 }
                 withCredentials([file(credentialsId: "${ENVIRONMENT}", variable: 'GOOGLE_CREDENTIALS')]) {
                     dir('terraform/environments') {
-                        sh "echo 'make init'"//'make init'
+                        sh 'make init'
                     }
                 }
             }
@@ -39,7 +39,7 @@ pipeline {
             steps {
                 withCredentials([file(credentialsId: "${ENVIRONMENT}", variable: 'GOOGLE_CREDENTIALS')]) {
                     dir('terraform/environments') {
-                        sh "echo 'make deatroy'"//'make destroy'
+                        sh 'make deatroy'
                     }
                 }
             }
