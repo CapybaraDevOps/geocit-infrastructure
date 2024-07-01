@@ -29,7 +29,7 @@ pipeline {
                       script{
 
                         //env.projectId = sh(script: 'gcloud config get-value project', returnStdout: true).trim()
-                        env.secretName = sh(script: "gcloud secrets list --filter='name:prod' --format='value(name)'", returnStdout: true).trim()
+                        env.secretName = sh(script: "gcloud secrets list --filter='name ~ "*.geo-database-credentials" --format='value(name)'", returnStdout: true).trim()
                         env.dbPassword = sh(script: "gcloud secrets versions access latest --secret=${secretName} ", returnStdout: true).trim()
     
                         //def instanceName = sh(script: "gcloud sql instances list --format=\"value(NAME)\" --project=${env.idProject}", returnStdout: true).trim()
