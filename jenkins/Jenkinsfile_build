@@ -36,7 +36,7 @@ pipeline {
 
                             // Run the gcloud projects list command and print the result
                             def projectId = sh(script: "gcloud projects list --format='table(projectId)'", returnStdout: true).trim()
-                            echo "Project List: ${projectId}"
+                            echo "${projectId}"
                       }
                    /* script {
                         def instanceName = sh(script: "gcloud sql instances list --format=\"value(NAME)\" --project=${env.idProject}", returnStdout: true).trim()
