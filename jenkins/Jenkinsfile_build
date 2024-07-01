@@ -31,11 +31,12 @@ pipeline {
             steps {
                 withCredentials([file(credentialsId: "${ENVIRONMENT}", variable: 'GOOGLE_CREDENTIALS')]) {
                       script{
-                        projectId = sh(script: 'gcloud projects list', returnStdout: true).trim()
-                        sh 'echo $projectId'
-                        //def instanceName = sh(script: "gcloud sql instances list --format=\"value(NAME)\" --project=${env.idProject}", returnStdout: true).trim()
-                        env.postgresIP = sh(script: "gcloud sql instances describe ${ENV}-${REGION}-postgres-db  --project=${env.projectId} --format='value(ipAddresses.ipAddress)'", returnStdout: true).trim()
-                        
+                        // Authenticate using the service account credentials
+                            sh 'gcloud auth activate-service-account --key-file=$GOOGLE_CREDENTIALS'
+
+                            // Run the gcloud projects list command and print the result
+                            def projectList = sh(script: 'gcloud projects list', returnStdout: true).trim()
+                            echo "Project List: ${projectList}"
                       }
                    /* script {
                         def instanceName = sh(script: "gcloud sql instances list --format=\"value(NAME)\" --project=${env.idProject}", returnStdout: true).trim()
