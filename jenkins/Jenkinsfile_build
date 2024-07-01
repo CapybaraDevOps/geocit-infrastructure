@@ -36,7 +36,7 @@ pipeline {
                     }
                 }
         }
-         stage('Get Database Credentials') {
+        stage('Get Database Credentials') {
             steps {
                 script {
                     def projectId = sh(script: "gcloud config get-value project", returnStdout: true).trim()
@@ -48,6 +48,7 @@ pipeline {
                 }
             }
         }
+    }
     stages {
         stage('Check IP') { //упростить поиск айпи
             steps {
