@@ -15,8 +15,7 @@ pipeline {
         ENVIRONMENT = "GCP-SA-${params.ENV}"
         //GOOGLE_CREDENTIALS = credentials('${ENVIRONMENT}) //заменить на дев , стейлд и прод
         //CREDENTIALS_FILE = credentials('env')
-        appProp = 'src/main/resources/application.properties'
-        app_js = 'src/main/webapp/static/js/app.*.js'
+        
         // Jfrog parameters
         hash = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
         buildName = "${params.ENV}-${params.BUILDNAME}-$BUILD_NUMBER-${hash}"
@@ -40,8 +39,7 @@ pipeline {
                       script{
                         // Authenticate using the service account credentials
                             sh 'gcloud auth activate-service-account --key-file=$GOOGLE_CREDENTIALS'
-                            def projectId = sh(script: "gcloud projects list --format='table(projectId)' ", returnStdout: true).trim()
-                            echo "${projectId}"
+                            def projectId = sh(script: "gcloud projects list --format='table(projectId)' | grep capybara", returnStdout: true).trim() 
                             sh "gcloud config set project ${projectId}"
                             def secretName = sh(script: "gcloud secrets list --filter='name:geo-database-credentials' --format='value(name)'", returnStdout: true).trim()
                             echo "${secretName}"
@@ -76,7 +74,8 @@ pipeline {
                         // def ip = env.externalIP
                         // def ip_db = env.postgresIP
                         //def escapedPassword = sh(script: "printf '%s\n' '${env.passwordBD}' | sed -e 's/[\\/&]/\\\\&/g'", returnStdout: true).trim()
-                        echo "${json}"
+                        appProp = 'src/main/resources/application.properties'
+                        app_js = 'src/main/webapp/static/js/app.*.js'
                         sh "sed -i 's|http://localhost:8080|https://capybara.pp.ua|g' $appProp"
                         sh "sed -i 's|localhost:5432|$postgresIP:5432|g' $appProp"
                         sh "sed -i 's|http://localhost:8080|https://capybara.pp.ua|g' $app_js"
