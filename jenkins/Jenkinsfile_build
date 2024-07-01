@@ -38,7 +38,7 @@ pipeline {
                             def projectId = sh(script: "gcloud projects list --format='table(projectId)' | grep capybara", returnStdout: true).trim()
                             echo "${projectId}"
                             sh "gcloud config set project ${projectId}"
-                            def secretName = sh(script: "gcloud secrets list --filter='name~*.geo-database-credentials' --format='value(name)'", returnStdout: true).trim()
+                            def secretName = sh(script: "gcloud secrets list --filter='name:geo-database-credentials' --format='value(name)'", returnStdout: true).trim()
                             echo "${secretName}"
 
                       }
