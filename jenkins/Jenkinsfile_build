@@ -13,7 +13,7 @@ pipeline {
     environment {
         ENVIRONMENT = "GCP-SA-${params.ENV}"
         //GOOGLE_CREDENTIALS = credentials('${ENVIRONMENT}) //заменить на дев , стейлд и прод
-        CREDENTIALS_FILE = credentials('env')
+        //CREDENTIALS_FILE = credentials('env')
         appProp = 'src/main/resources/application.properties'
         app_js = 'src/main/webapp/static/js/app.*.js'
         // Jfrog parameters
