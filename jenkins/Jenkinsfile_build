@@ -11,9 +11,8 @@ pipeline {
         string(name: 'BUILDNAME', defaultValue: 'citizen', description: 'Build Name')
     }
     environment {
-        GOOGLE_CREDENTIALS = credentials('terraform_creds')
         CREDENTIALS_FILE = credentials('env')
-        //ENVIRONMENT = "GCP-SA-${params.ENV}"
+        ENVIRONMENT = "GCP-SA-${params.ENV}"
         //GOOGLE_CREDENTIALS = credentials('${ENVIRONMENT}) //заменить на дев , стейлд и прод
         //CREDENTIALS_FILE = credentials('env')
         appProp = 'src/main/resources/application.properties'
@@ -28,9 +27,9 @@ pipeline {
         //dbPassword = sh(script: "gcloud secrets versions access latest --secret=${secretName} --project=${projectId}", returnStdout: true).trim()
     }
     stages {
-        stage('Check IP') { //упростить поиск айпи
+        stage('Check IP') {
             steps {
-                withCredentials([file(credentialsId: 'terraform_creds', variable: 'GOOGLE_CREDENTIALS')]) {
+                withCredentials([file(credentialsId: "${ENVIRONMENT}", variable: 'GOOGLE_CREDENTIALS')]) {
                       script{
                         projectId = sh(script: 'gcloud projects list', returnStdout: true).trim()
                         sh 'echo $projectId'
