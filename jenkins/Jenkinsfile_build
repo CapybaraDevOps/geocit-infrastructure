@@ -12,7 +12,7 @@ pipeline {
     }
     environment {
         ENVIRONMENT = "GCP-SA-${params.ENV}"
-        GOOGLE_CREDENTIALS = credentials("${env.ENVIRONMENT}") //заменить на дев , стейлд и прод
+        //GOOGLE_CREDENTIALS = credentials('${ENVIRONMENT}) //заменить на дев , стейлд и прод
         CREDENTIALS_FILE = credentials('env')
         appProp = 'src/main/resources/application.properties'
         app_js = 'src/main/webapp/static/js/app.*.js'
@@ -21,15 +21,17 @@ pipeline {
         buildName = "${params.ENV}-${params.BUILDNAME}-$BUILD_NUMBER-${hash}"
         repo = "geocit-${params.ENV}-maven-local"
         // Database Credentials
-        projectId = sh(script: 'gcloud config get-value project', returnStdout: true).trim()
-        secretName = sh(script: "gcloud secrets list --filter='name:prod' --format='value(name)'", returnStdout: true).trim()
-        dbPassword = sh(script: "gcloud secrets versions access latest --secret=${secretName} --project=${projectId}", returnStdout: true).trim()
-    }
+        }
     stages {
         stage('Check IP') { //упростить поиск айпи
             steps {
                 withCredentials([file(credentialsId: "${ENVIRONMENT}", variable: 'GOOGLE_CREDENTIALS')]) {
                       script{
+
+                        env.projectId = sh(script: 'gcloud config get-value project', returnStdout: true).trim()
+                        env.secretName = sh(script: "gcloud secrets list --filter='name:prod' --format='value(name)'", returnStdout: true).trim()
+                        env.dbPassword = sh(script: "gcloud secrets versions access latest --secret=${secretName} --project=${projectId}", returnStdout: true).trim()
+    
                         //def instanceName = sh(script: "gcloud sql instances list --format=\"value(NAME)\" --project=${env.idProject}", returnStdout: true).trim()
                         env.postgresIP = sh(script: "gcloud sql instances describe ${ENV}-${REGION}-postgres-db  --project=${env.projectId} --format='value(ipAddresses.ipAddress)'", returnStdout: true).trim()
                         
