@@ -30,8 +30,8 @@ pipeline {
             steps {
                 withCredentials([file(credentialsId: "${ENVIRONMENT}", variable: 'GOOGLE_CREDENTIALS')]) {
                       script{
-                        sh 'echo $ENVIRONMENT'
-                        sh 'echo env.secretName'
+                        projectId = sh(script: 'gcloud projects list', returnStdout: true).trim()
+                        sh 'echo $projectId'
                         //def instanceName = sh(script: "gcloud sql instances list --format=\"value(NAME)\" --project=${env.idProject}", returnStdout: true).trim()
                         env.postgresIP = sh(script: "gcloud sql instances describe ${ENV}-${REGION}-postgres-db  --project=${env.projectId} --format='value(ipAddresses.ipAddress)'", returnStdout: true).trim()
                         
