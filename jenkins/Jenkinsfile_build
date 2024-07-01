@@ -27,13 +27,21 @@ pipeline {
         //dbPassword = sh(script: "gcloud secrets versions access latest --secret=${secretName} --project=${projectId}", returnStdout: true).trim()
     }
     stages {
+        stage('git checkout') {
+                steps {
+                    script {
+                        git branch: 'main', credentialsId: 'gitcreds', url: 'git@github.com:CapybaraDevOps/geocit.git'
+                    }
+                }
+        }
         stage('Check IP') {
             steps {
                 withCredentials([file(credentialsId: "${ENVIRONMENT}", variable: 'GOOGLE_CREDENTIALS')]) {
                       script{
                         // Authenticate using the service account credentials
                             sh 'gcloud auth activate-service-account --key-file=$GOOGLE_CREDENTIALS'
-                            def projectId = sh(script: "gcloud projects list --format='table(projectId)' | grep capybara", returnStdout: true).trim()
+                            def projectId = sh(script: "gcloud projects list --format='table(projectId)' ", returnStdout: true).trim()
+                            echo "${projectId}"
                             sh "gcloud config set project ${projectId}"
                             def secretName = sh(script: "gcloud secrets list --filter='name:geo-database-credentials' --format='value(name)'", returnStdout: true).trim()
                             echo "${secretName}"
@@ -59,6 +67,13 @@ pipeline {
                     }*/
                 }
             }
+        }
+        stage('git checkout') {
+                steps {
+                    script {
+                        git branch: 'main', credentialsId: 'gitcreds', url: 'git@github.com:CapybaraDevOps/geocit.git'
+                    }
+                }
         }
         stage('Configure') {
             steps {
