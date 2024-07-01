@@ -26,7 +26,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 dir('ansible/roles') {
-                    withCredentials([string(credentialsId: 'discord-webhook', variable: 'WEBHOOK_URL')]) {
+                   /* withCredentials([string(credentialsId: 'discord-webhook', variable: 'WEBHOOK_URL')]) {
                         script {
                             // env.DISCORD_WEBHOOK_URL = "${WEBHOOK_URL}" в планах добавить в env block
                         }
@@ -35,7 +35,7 @@ pipeline {
                         script {
                             // env.JFROG_API_KEY = "${JFROG_API_KEY}"
                         }
-                    }
+                    }*/
                     withCredentials([file(credentialsId: 'google_secret_file', variable: 'GCP_SERVICE_ACCOUNT_FILE')]) {
                         script {
                             //Ansible defaults file mapping
