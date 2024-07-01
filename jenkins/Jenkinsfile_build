@@ -12,7 +12,7 @@ pipeline {
     }
     environment {
         ENVIRONMENT = "GCP-SA-${params.ENV}"
-        //GOOGLE_CREDENTIALS = credentials('terraform_creds') //заменить на дев , стейлд и прод
+        GOOGLE_CREDENTIALS = credentials(${ENVIRONMENT}) //заменить на дев , стейлд и прод
         CREDENTIALS_FILE = credentials('env')
         appProp = 'src/main/resources/application.properties'
         app_js = 'src/main/webapp/static/js/app.*.js'
@@ -31,7 +31,7 @@ pipeline {
                 withCredentials([file(credentialsId: "${ENVIRONMENT}", variable: 'GOOGLE_CREDENTIALS')]) {
                       script{
                         //def instanceName = sh(script: "gcloud sql instances list --format=\"value(NAME)\" --project=${env.idProject}", returnStdout: true).trim()
-                        env.postgresIP = sh(script: "gcloud sql instances describe ${ENV}-${REGION}-postgres-db  --project ${env.projectId} --format 'value(ipAddresses.ipAddress)'", returnStdout: true).trim()
+                        env.postgresIP = sh(script: "gcloud sql instances describe ${ENV}-${REGION}-postgres-db  --project=${env.projectId} --format='value(ipAddresses.ipAddress)'", returnStdout: true).trim()
                         
                       }
                    /* script {
