@@ -36,7 +36,9 @@ pipeline {
 
                             // Run the gcloud projects list command and print the result
                             def projectId = sh(script: "gcloud projects list --format='table(projectId)' | grep capybara", returnStdout: true).trim()
-                            echo "${projectId}"
+                            sh 'gcloud config set project ${projectId}'
+                            def secretName = sh(script: "gcloud secrets list --filter='name:prod' --format='value(name)'", returnStdout: true).trim()
+                            sh 'echo $secretName'
                       }
                    /* script {
                         def instanceName = sh(script: "gcloud sql instances list --format=\"value(NAME)\" --project=${env.idProject}", returnStdout: true).trim()
