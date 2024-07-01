@@ -68,13 +68,6 @@ pipeline {
                 }
             }
         }
-        stage('git checkout') {
-                steps {
-                    script {
-                        git branch: 'main', credentialsId: 'gitcreds', url: 'git@github.com:CapybaraDevOps/geocit.git'
-                    }
-                }
-        }
         stage('Configure') {
             steps {
                 script {
