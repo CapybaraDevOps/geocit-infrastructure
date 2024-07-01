@@ -7,10 +7,12 @@ pipeline {
     }
     parameters {
         choice(name: 'ENV', choices: ['dev', 'stage', 'prod'], description: 'Deployment environment')
+        choice(name: 'REGION', choices: ['europe', 'us'], description: 'Select the region')
         string(name: 'BUILDNAME', defaultValue: 'citizen', description: 'Build Name')
     }
     environment {
-        GOOGLE_CREDENTIALS = credentials('terraform_creds')
+        ENVIRONMENT = "GCP-SA-${params.ENV}"
+        //GOOGLE_CREDENTIALS = credentials('terraform_creds') //заменить на дев , стейлд и прод
         CREDENTIALS_FILE = credentials('env')
         appProp = 'src/main/resources/application.properties'
         app_js = 'src/main/webapp/static/js/app.*.js'
@@ -24,10 +26,15 @@ pipeline {
         dbPassword = sh(script: "gcloud secrets versions access latest --secret=${secretName} --project=${projectId}", returnStdout: true).trim()
     }
     stages {
-        stage('Check IP') {
+        stage('Check IP') { //упростить поиск айпи
             steps {
-                withCredentials([file(credentialsId: 'terraform_creds', variable: 'GOOGLE_CREDENTIALS')]) {
-                    script {
+                withCredentials([file(credentialsId: "${ENVIRONMENT}", variable: 'GOOGLE_CREDENTIALS')]) {
+                      script{
+                        //def instanceName = sh(script: "gcloud sql instances list --format=\"value(NAME)\" --project=${env.idProject}", returnStdout: true).trim()
+                        export postgresIP = $(gcloud sql instances describe $ENV-$REGION-postgres-db  --project=${env.projectId} --format='value(ipAddresses.ipAddress)')
+                        sh 'echo $postgresIP'
+                      }
+                   /* script {
                         def instanceName = sh(script: "gcloud sql instances list --format=\"value(NAME)\" --project=${env.idProject}", returnStdout: true).trim()
                         def postgresIP = sh(script: "gcloud sql instances describe ${instanceName} --format=json | jq -r '{name: .name, ip: .ipAddresses[0].ipAddress}'", returnStdout: true).trim()
                         def externalIP = sh(script: 'gcloud compute forwarding-rules list --format=json | jq \'.[] | {name: .name, ip: .IPAddress}\'', returnStdout: true).trim()
@@ -41,7 +48,7 @@ pipeline {
                         env.externalIP = externalIPAddress
                         env.postgresIP = postgresIPAddress
                         sh 'echo small fix'
-                    }
+                    }*/
                 }
             }
         }

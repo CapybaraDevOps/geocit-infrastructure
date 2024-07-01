@@ -19,14 +19,16 @@ pipeline {
         //Jfrog env
         JFROG_HOST = sh(script: "gcloud compute instances list --format=json | jq '.[] | select(.name|contains(\"artifactory\")) | .networkInterfaces[].accessConfigs[].natIP'", returnStdout: true).trim()
         JFROG_ENV = params.ENV
+        DISCORD_WEBHOOK_URL = credentials('discord-webhook')
+        JFROG_API_KEY = credentials('jfrog-api-key')
     }
     stages {
         stage('Deploy') {
             steps {
                 dir('ansible/roles') {
-                    withCredentials([string(credentialsId: 'discord-webhook', variable: 'DISCORD_WEBHOOK_URL')]) {
+                    withCredentials([string(credentialsId: 'discord-webhook', variable: 'WEBHOOK_URL')]) {
                         script {
-                            // env.DISCORD_WEBHOOK_URL = "${WEBHOOK_URL}"
+                            // env.DISCORD_WEBHOOK_URL = "${WEBHOOK_URL}" в планах добавить в env block
                         }
                     }
                     withCredentials([string(credentialsId: 'jfrog-api-key', variable: 'JFROG_API_KEY')]) {
