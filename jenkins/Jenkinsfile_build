@@ -11,7 +11,9 @@ pipeline {
         string(name: 'BUILDNAME', defaultValue: 'citizen', description: 'Build Name')
     }
     environment {
-        ENVIRONMENT = "GCP-SA-${params.ENV}"
+        GOOGLE_CREDENTIALS = credentials('terraform_creds')
+        CREDENTIALS_FILE = credentials('env')
+        //ENVIRONMENT = "GCP-SA-${params.ENV}"
         //GOOGLE_CREDENTIALS = credentials('${ENVIRONMENT}) //заменить на дев , стейлд и прод
         //CREDENTIALS_FILE = credentials('env')
         appProp = 'src/main/resources/application.properties'
@@ -25,6 +27,27 @@ pipeline {
         //secretName = sh(script: "gcloud secrets list --filter='name:prod' --format='value(name)'", returnStdout: true).trim()
         //dbPassword = sh(script: "gcloud secrets versions access latest --secret=${secretName} --project=${projectId}", returnStdout: true).trim()
     }
+    stages {
+    
+        stage('git checkout') {
+                steps {
+                    script {
+                        git branch: 'main', credentialsId: 'gitcreds', url: 'git@github.com:CapybaraDevOps/geocit.git'
+                    }
+                }
+        }
+         stage('Get Database Credentials') {
+            steps {
+                script {
+                    def projectId = sh(script: "gcloud config get-value project", returnStdout: true).trim()
+                    def secretName = sh(script: "gcloud secrets list --filter='name:prod' --format='value(name)'", returnStdout: true).trim()
+
+                    def dbPassword = sh(script: "gcloud secrets versions access latest --secret=${secretName} --project=${projectId}", returnStdout: true).trim()
+                    env.passwordBD = dbPassword
+                    env.idProject = projectId
+                }
+            }
+        }
     stages {
         stage('Check IP') { //упростить поиск айпи
             steps {
