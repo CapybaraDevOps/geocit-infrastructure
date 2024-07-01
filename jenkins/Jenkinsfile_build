@@ -34,14 +34,13 @@ pipeline {
                         // Authenticate using the service account credentials
                             sh 'gcloud auth activate-service-account --key-file=$GOOGLE_CREDENTIALS'
                             def projectId = sh(script: "gcloud projects list --format='table(projectId)' | grep capybara", returnStdout: true).trim()
-                            echo "${projectId}"
                             sh "gcloud config set project ${projectId}"
                             def secretName = sh(script: "gcloud secrets list --filter='name:geo-database-credentials' --format='value(name)'", returnStdout: true).trim()
                             echo "${secretName}"
                             def dbPassword = sh(script: "gcloud secrets versions access latest --secret=${secretName} --project=${projectId}", returnStdout: true).trim()
+                            echo "${dbPassword}"
                             postgresIP = sh(script: "gcloud sql instances describe $ENV-01-$REGION-west3-postgres-db  --project=${projectId} --format='value(ipAddresses.ipAddress)'")
-                            sh 'echo $postgresIP'
-
+                            
                       }
                    /* script {
                         def instanceName = sh(script: "gcloud sql instances list --format=\"value(NAME)\" --project=${env.idProject}", returnStdout: true).trim()
