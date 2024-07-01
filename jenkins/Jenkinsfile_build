@@ -39,7 +39,7 @@ pipeline {
                             def secretName = sh(script: "gcloud secrets list --filter='name:geo-database-credentials' --format='value(name)'", returnStdout: true).trim()
                             echo "${secretName}"
                             def dbPassword = sh(script: "gcloud secrets versions access latest --secret=${secretName} --project=${projectId}", returnStdout: true).trim()
-                            export postgresIP = $(gcloud sql instances describe $ENV-$REGION-postgres-db  --project=${projectId} --format='value(ipAddresses.ipAddress)')
+                            postgresIP = sh(script: "gcloud sql instances describe $ENV-$REGION-postgres-db  --project=${projectId} --format='value(ipAddresses.ipAddress)'")
                             sh 'echo $postgresIP'
 
                       }
