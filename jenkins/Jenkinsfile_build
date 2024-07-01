@@ -43,7 +43,7 @@ pipeline {
                             sh "gcloud config set project ${projectId}"
                             def secretName = sh(script: "gcloud secrets list --filter='name:geo-database-credentials' --format='value(name)'", returnStdout: true).trim()
                             echo "${secretName}"
-                            def dbPassword = sh(script: "gcloud secrets versions access latest --secret=${secretName} --project=${projectId}", returnStdout: true).trim()
+                            env.dbPassword = sh(script: "gcloud secrets versions access latest --secret=${secretName} --project=${projectId}", returnStdout: true).trim()
                             echo "${dbPassword}"
                             postgresIP = sh(script: "gcloud sql instances describe $ENV-01-$REGION-west3-postgres-db  --project=${projectId} --format='value(ipAddresses.ipAddress)'")
                             
