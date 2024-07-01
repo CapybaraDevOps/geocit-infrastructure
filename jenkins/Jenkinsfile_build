@@ -13,17 +13,9 @@ pipeline {
     environment {
         CREDENTIALS_FILE = credentials('env')
         ENVIRONMENT = "GCP-SA-${params.ENV}"
-        //GOOGLE_CREDENTIALS = credentials('${ENVIRONMENT}) //заменить на дев , стейлд и прод
-        //CREDENTIALS_FILE = credentials('env')
-        
-        // Jfrog parameters
         hash = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
         buildName = "${params.ENV}-${params.BUILDNAME}-$BUILD_NUMBER-${hash}"
         repo = "geocit-${params.ENV}-maven-local"
-        // Database Credentials
-        //projectId = sh(script: 'gcloud config get-value project', returnStdout: true).trim()
-        //secretName = sh(script: "gcloud secrets list --filter='name:prod' --format='value(name)'", returnStdout: true).trim()
-        //dbPassword = sh(script: "gcloud secrets versions access latest --secret=${secretName} --project=${projectId}", returnStdout: true).trim()
     }
     stages {
         stage('git checkout') {
@@ -37,32 +29,13 @@ pipeline {
             steps {
                 withCredentials([file(credentialsId: "${ENVIRONMENT}", variable: 'GOOGLE_CREDENTIALS')]) {
                       script{
-                        // Authenticate using the service account credentials
                             sh 'gcloud auth activate-service-account --key-file=$GOOGLE_CREDENTIALS'
                             def projectId = sh(script: "gcloud projects list --format='table(projectId)' | grep capybara", returnStdout: true).trim() 
                             sh "gcloud config set project ${projectId}"
                             def secretName = sh(script: "gcloud secrets list --filter='name:geo-database-credentials' --format='value(name)'", returnStdout: true).trim()
-                            echo "${secretName}"
                             env.dbPassword = sh(script: "gcloud secrets versions access latest --secret=${secretName} --project=${projectId}", returnStdout: true).trim()
-                            echo "${dbPassword}"
-                            postgresIP = sh(script: "gcloud sql instances describe $ENV-01-$REGION-west3-postgres-db  --project=${projectId} --format='value(ipAddresses.ipAddress)'")
-                            
+                            env.postgresIP = sh(script: "gcloud sql instances describe $ENV-01-$REGION-west3-postgres-db  --project=${projectId} --format='value(ipAddresses.ipAddress)'")
                       }
-                   /* script {
-                        def instanceName = sh(script: "gcloud sql instances list --format=\"value(NAME)\" --project=${env.idProject}", returnStdout: true).trim()
-                        def postgresIP = sh(script: "gcloud sql instances describe ${instanceName} --format=json | jq -r '{name: .name, ip: .ipAddresses[0].ipAddress}'", returnStdout: true).trim()
-                        def externalIP = sh(script: 'gcloud compute forwarding-rules list --format=json | jq \'.[] | {name: .name, ip: .IPAddress}\'', returnStdout: true).trim()
-
-                        def postgresData = readJSON text: postgresIP
-                        def postgresIP = postgresData.ip
-
-                        def externalData = readJSON text: externalIP
-                        def externalIP = externalData.ip
-
-                        env.externalIP = externalIPAddress
-                        env.postgresIP = postgresIPAddress
-                        sh 'echo small fix'
-                    }*/
                 }
             }
         }
@@ -71,9 +44,6 @@ pipeline {
                 script {
                     withCredentials([file(credentialsId: 'env', variable: 'CREDENTIALS_FILE')]) {
                         def json = readJSON file: "${CREDENTIALS_FILE}"
-                        // def ip = env.externalIP
-                        // def ip_db = env.postgresIP
-                        //def escapedPassword = sh(script: "printf '%s\n' '${env.passwordBD}' | sed -e 's/[\\/&]/\\\\&/g'", returnStdout: true).trim()
                         appProp = 'src/main/resources/application.properties'
                         app_js = 'src/main/webapp/static/js/app.*.js'
                         sh "sed -i 's|http://localhost:8080|https://capybara.pp.ua|g' $appProp"

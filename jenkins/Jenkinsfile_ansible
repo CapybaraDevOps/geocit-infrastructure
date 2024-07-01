@@ -13,12 +13,12 @@ pipeline {
     }
     environment {
         //GCP env
-        GCP_PROJECT = params.PROJECT_NAME
-        GCP_ZONE = params.ZONE
+        GCP_PROJECT = "${params.PROJECT_NAME}"
+        GCP_ZONE = "${params.ZONE}"
         MONITORING_IP = sh(script: "gcloud compute instances list --format=json | jq '.[] | select(.name|contains(\"monitoring\")) | .networkInterfaces[].networkIP'", returnStdout: true).trim()
         //Jfrog env
         JFROG_HOST = sh(script: "gcloud compute instances list --format=json | jq '.[] | select(.name|contains(\"artifactory\")) | .networkInterfaces[].accessConfigs[].natIP'", returnStdout: true).trim()
-        JFROG_ENV = params.ENV
+        JFROG_ENV = "${params.ENV}"
         DISCORD_WEBHOOK_URL = credentials('discord-webhook')
         JFROG_API_KEY = credentials('jfrog-api-key')
     }
