@@ -35,7 +35,7 @@ pipeline {
                             sh 'gcloud auth activate-service-account --key-file=$GOOGLE_CREDENTIALS'
 
                             // Run the gcloud projects list command and print the result
-                            def projectId = sh(script: "gcloud projects list --format='table(projectId)'", returnStdout: true).trim()
+                            def projectId = sh(script: "gcloud projects list --format='table(projectId)' | grep capybara", returnStdout: true).trim()
                             echo "${projectId}"
                       }
                    /* script {
