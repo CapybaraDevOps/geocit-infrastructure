@@ -35,8 +35,8 @@ pipeline {
                             sh 'gcloud auth activate-service-account --key-file=$GOOGLE_CREDENTIALS'
 
                             // Run the gcloud projects list command and print the result
-                            def projectList = sh(script: 'gcloud projects list', returnStdout: true).trim()
-                            echo "Project List: ${projectList}"
+                            def projectId = sh(script: 'gcloud config get-value project', returnStdout: true).trim()
+                            echo "Project List: ${projectId}"
                       }
                    /* script {
                         def instanceName = sh(script: "gcloud sql instances list --format=\"value(NAME)\" --project=${env.idProject}", returnStdout: true).trim()
