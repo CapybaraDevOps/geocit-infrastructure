@@ -22,7 +22,7 @@ pipeline {
         repo = "geocit-${params.ENV}-maven-local"
         // Database Credentials
         projectId = sh(script: 'gcloud config get-value project', returnStdout: true).trim()
-        secretName = sh(script: "gcloud secrets list --filter='name:prod' --format='value(name)'", returnStdout: true).trim()
+        secretName = sh(script: "gcloud secrets list --format='value(name)'", returnStdout: true).trim()
         dbPassword = sh(script: "gcloud secrets versions access latest --secret=${secretName} --project=${projectId}", returnStdout: true).trim()
     }
     stages {
