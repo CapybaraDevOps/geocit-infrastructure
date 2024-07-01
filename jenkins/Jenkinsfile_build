@@ -28,12 +28,12 @@ pipeline {
                 withCredentials([file(credentialsId: "${ENVIRONMENT}", variable: 'GOOGLE_CREDENTIALS')]) {
                       script{
 
-                        env.projectId = sh(script: 'gcloud config get-value project', returnStdout: true).trim()
+                        //env.projectId = sh(script: 'gcloud config get-value project', returnStdout: true).trim()
                         env.secretName = sh(script: "gcloud secrets list --filter='name:prod' --format='value(name)'", returnStdout: true).trim()
-                        env.dbPassword = sh(script: "gcloud secrets versions access latest --secret=${secretName} --project=${projectId}", returnStdout: true).trim()
+                        env.dbPassword = sh(script: "gcloud secrets versions access latest --secret=${secretName} ", returnStdout: true).trim()
     
                         //def instanceName = sh(script: "gcloud sql instances list --format=\"value(NAME)\" --project=${env.idProject}", returnStdout: true).trim()
-                        env.postgresIP = sh(script: "gcloud sql instances describe ${ENV}-${REGION}-postgres-db  --project=${env.projectId} --format='value(ipAddresses.ipAddress)'", returnStdout: true).trim()
+                        env.postgresIP = sh(script: "gcloud sql instances describe ${ENV}-${REGION}-postgres-db  --format='value(ipAddresses.ipAddress)'", returnStdout: true).trim()
                         
                       }
                    /* script {
