@@ -28,31 +28,9 @@ pipeline {
         //dbPassword = sh(script: "gcloud secrets versions access latest --secret=${secretName} --project=${projectId}", returnStdout: true).trim()
     }
     stages {
-    
-        stage('git checkout') {
-                steps {
-                    script {
-                        git branch: 'main', credentialsId: 'gitcreds', url: 'git@github.com:CapybaraDevOps/geocit.git'
-                    }
-                }
-        }
-        stage('Get Database Credentials') {
-            steps {
-                script {
-                    def projectId = sh(script: "gcloud config get-value project", returnStdout: true).trim()
-                    def secretName = sh(script: "gcloud secrets list --filter='name:prod' --format='value(name)'", returnStdout: true).trim()
-
-                    def dbPassword = sh(script: "gcloud secrets versions access latest --secret=${secretName} --project=${projectId}", returnStdout: true).trim()
-                    env.passwordBD = dbPassword
-                    env.idProject = projectId
-                }
-            }
-        }
-    }
-    stages {
         stage('Check IP') { //упростить поиск айпи
             steps {
-                withCredentials([file(credentialsId: "${ENVIRONMENT}", variable: 'GOOGLE_CREDENTIALS')]) {
+                withCredentials([file(credentialsId: 'terraform_creds', variable: 'GOOGLE_CREDENTIALS')]) {
                       script{
                         projectId = sh(script: 'gcloud projects list', returnStdout: true).trim()
                         sh 'echo $projectId'
