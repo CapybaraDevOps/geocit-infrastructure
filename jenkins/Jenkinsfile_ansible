@@ -13,6 +13,7 @@ pipeline {
     }
     environment {
         //GCP env
+        ENVIRONMENT = "GCP-SA-${params.ENV}"
         GCP_PROJECT = "${params.PROJECT_NAME}"
         GCP_ZONE = "${params.ZONE}"
         MONITORING_IP = sh(script: "gcloud compute instances list --format=json | jq '.[] | select(.name|contains(\"monitoring\")) | .networkInterfaces[].networkIP'", returnStdout: true).trim()
@@ -36,7 +37,7 @@ pipeline {
                             // env.JFROG_API_KEY = "${JFROG_API_KEY}"
                         }
                     }*/
-                    withCredentials([file(credentialsId: 'google_secret_file', variable: 'GCP_SERVICE_ACCOUNT_FILE')]) {
+                    withCredentials([file(credentialsId: "${ENVIRONMENT}", variable: 'GCP_SERVICE_ACCOUNT_FILE')]) {
                         script {
                             //Ansible defaults file mapping
                             sh 'envsubst < geocitizen/defaults/main.yml | tee geocitizen/defaults/main_temp.yml'
