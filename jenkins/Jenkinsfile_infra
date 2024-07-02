@@ -24,7 +24,7 @@ pipeline {
                 }
                 withCredentials([file(credentialsId: "${ENVIRONMENT}", variable: 'GOOGLE_CREDENTIALS')]) {
                     dir('terraform/environments') {
-                        sh 'printenv'
+                        sh 'printenv | sort'
                         sh 'make plan'
                     }
                 }
