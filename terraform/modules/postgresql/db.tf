@@ -3,6 +3,9 @@ resource "google_sql_database_instance" "main" {
   database_version    = "POSTGRES_12"
   deletion_protection = false
   depends_on          = [google_service_networking_connection.private_vpc_connection]
+  lifecycle {
+    ignore_changes = all
+  }
 
   settings {
     availability_type = "REGIONAL"

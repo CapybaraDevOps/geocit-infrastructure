@@ -1,8 +1,11 @@
+/* groovylint-disable NestedBlockDepth */
 pipeline {
     agent any
+    parameters {
+        string(name: 'AWX_PROJECT_ID', defaultValue: '20', description: 'Please, enter your AWX_PROJECT_ID: ')
+    }
     environment {
-        AWX_URL = 'http://34.147.232.242:8052'
-        AWX_PROJECT_ID = '20' 
+        AWX_URL = 'http://awx.capybara.pp.ua:8052'
     }
     stages {
         stage('Trigger AWX Workflow') {
@@ -21,6 +24,11 @@ pipeline {
                     }
                 }
             }
+        }
+    }
+    post {
+        always {
+            cleanWs()
         }
     }
 }
