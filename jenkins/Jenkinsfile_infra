@@ -21,10 +21,10 @@ pipeline {
             steps {
                 script {
                     echo "Selected environment GEO: ${GEO_ENV}"
-                    sh 'printenv'
                 }
                 withCredentials([file(credentialsId: "${ENVIRONMENT}", variable: 'GOOGLE_CREDENTIALS')]) {
                     dir('terraform/environments') {
+                        sh 'printenv'
                         sh 'make plan'
                     }
                 }
