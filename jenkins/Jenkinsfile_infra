@@ -21,6 +21,7 @@ pipeline {
             steps {
                 script {
                     echo "Selected environment GEO: ${GEO_ENV}"
+                    echo 'env'
                 }
                 withCredentials([file(credentialsId: "${ENVIRONMENT}", variable: 'GOOGLE_CREDENTIALS')]) {
                     dir('terraform/environments') {
