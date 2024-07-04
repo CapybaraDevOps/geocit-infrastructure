@@ -1,4 +1,4 @@
-GEO_ENV ?= stage-01-europe-west3-geo
+GEO_ENV ?= dev-01-europe-west3-geo
 
 plan:
 	terragrunt run-all plan --terragrunt-working-dir ${GEO_ENV}/geo	
