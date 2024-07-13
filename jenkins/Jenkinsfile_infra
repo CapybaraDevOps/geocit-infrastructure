@@ -12,7 +12,7 @@ pipeline {
         string(name: 'PROJECT_NAME', defaultValue: 'geo', description: 'Project name')
     }
     environment {
-        ENVIRONMENT = 'andrii'
+        ENVIRONMENT = "GCP-SA-${params.ENV}"
         GEO_ENV = "${params.ENV}-${params.ENV_VARIABLE}-${params.REGION}-${params.ZONE}-${params.PROJECT_NAME}"
         TF_VAR_GEO_ENV = "${params.ENV}-${params.ENV_VARIABLE}-${params.REGION}-${params.ZONE}"
     }
@@ -22,7 +22,8 @@ pipeline {
                 script {
                     echo "Selected environment GEO: ${GEO_ENV}"
                 }
-                withCredentials([file(credentialsId: "${ENVIRONMENT}", variable: 'GOOGLE_CREDENTIALS')]) {
+                withCredentials([file(credentialsId: "${ENVIRONMENT}", variable: 'GOOGLE_CREDENTIALS'),
+                                 file(credentialsId: 'GCP-SA-stage', variable: 'GOOGLE_APPLICATIONS_CREDENTIALS')]) {
                     dir('terraform/environments') {
                         sh 'printenv | sort'
                         sh 'make plan'
