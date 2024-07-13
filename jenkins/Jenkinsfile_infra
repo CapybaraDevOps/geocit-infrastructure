@@ -25,7 +25,8 @@ pipeline {
                 withCredentials([file(credentialsId: "${ENVIRONMENT}", variable: 'GOOGLE_CREDENTIALS'),
                                  file(credentialsId: 'GCP-SA-stage', variable: 'GOOGLE_APPLICATION_CREDENTIALS_FILE')]) {
                     dir('terraform/environments') {
-                        sh 'export GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_APPLICATION_CREDENTIALS_FILE'
+                        writeFile file: 'sa.json', text: GOOGLE_APPLICATION_CREDENTIALS_FILE
+                        sh 'export GOOGLE_APPLICATION_CREDENTIALS=$PWD/sa.json'
                         sh 'printenv | sort'
                         sh 'make plan'
                     }
