@@ -30,9 +30,10 @@ pipeline {
                                  file(credentialsId: 'GCP-SA-stage', variable: 'GOOGLE_CREDENTIALS_FILE')]) {
                     dir('terraform/environments') {
                         writeFile file: 'sa.json', text: GOOGLE_CREDENTIALS_FILE
+                        sh 'ls -al'
                         sh 'make destroy'
                     }
-                }
+                                 }
             }
         }
     }
