@@ -15,5 +15,5 @@ provider "google" {
   region      = var.region
   zone        = var.zone
   alias       = "stage"
-  credentials = file("/var/lib/jenkins/workspace/GEO_Infrastructure/terraform/environments/sa.json")
+  credentials = file("/var/lib/jenkins/workspace/GEO_Infrastructure_Destroy/terraform/environments/sa.json")
 }
