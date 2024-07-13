@@ -27,7 +27,7 @@ inputs = {
   region        = "europe-west3"
   zone          = "europe-west3-c"
   env           = "prod-01"
-  machine_type  = "e2-micro"
+  machine_type  = "e2-medium"
   custom_labels = {}
   enable_ssl    = false
 }
