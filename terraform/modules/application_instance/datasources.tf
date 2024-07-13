@@ -9,7 +9,7 @@ data "google_compute_ssl_certificate" "lb_ssl" {
 }
 
 data "google_compute_network" "awx-network" {
-  project = "capybara-stage"
-  name    = "awx-network"
-  # provider = google.stage
+  project  = "capybara-stage"
+  name     = "awx-network"
+  provider = google.stage
 }
