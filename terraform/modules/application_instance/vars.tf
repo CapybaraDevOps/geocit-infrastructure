@@ -47,7 +47,3 @@ variable "env" {
   description = "Environment to deploy"
   type        = string
 }
-
-variable "GOOGLE_APPLICATION_CREDENTIALS" {
-  description = "Path to the service account key file"
-}

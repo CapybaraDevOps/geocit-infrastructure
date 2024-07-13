@@ -15,5 +15,5 @@ provider "google" {
   region      = var.region
   zone        = var.zone
   alias       = "stage"
-  credentials = file(var.GOOGLE_APPLICATION_CREDENTIALS)
+  credentials = file("sa.json")
 }
