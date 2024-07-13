@@ -47,8 +47,3 @@ variable "env" {
   description = "Environment to deploy"
   type        = string
 }
-
-variable "GOOGLE_APPLICATIONS_CREDENTIALS" {
-  description = "Credentials to awx-network"
-  sensitive   = true
-}
