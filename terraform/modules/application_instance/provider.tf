@@ -10,4 +10,3 @@ provider "google-beta" {
   zone    = var.zone
 }
 
-
