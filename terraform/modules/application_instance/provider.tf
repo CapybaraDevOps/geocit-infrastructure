@@ -10,12 +10,4 @@ provider "google-beta" {
   zone    = var.zone
 }
 
-provider "google" {
-  project     = "capybara-stage"
-  region      = var.region
-  zone        = var.zone
-  alias       = "capybara-stage"
-  credentials = file(GOOGLE_APPLICATIONS_CREDENTIALS)
-}
-
 
