@@ -27,6 +27,8 @@ pipeline {
                     dir('terraform/environments') {
                         writeFile file: 'sa.json', text: GOOGLE_APPLICATION_CREDENTIALS_FILE
                         sh 'export GOOGLE_APPLICATION_CREDENTIALS=$PWD/sa.json'
+                        sh 'pwd'
+                        sh 'ls -al'
                         sh 'printenv | sort'
                         sh 'make plan'
                     }
