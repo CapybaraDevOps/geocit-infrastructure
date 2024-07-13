@@ -15,7 +15,7 @@ provider "google" {
   region      = var.region
   zone        = var.zone
   alias       = "capybara-stage"
-  credentials = file("/home/user/capybara-stage.json")
+  credentials = GOOGLE_APPLICATIONS_CREDENTIALS
 }
 
 
