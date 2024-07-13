@@ -15,5 +15,5 @@ provider "google" {
   region      = var.region
   zone        = var.zone
   alias       = "stage"
-  credentials = file("$GOOGLE_APPLICATIONS_CREDENTIALS")
+  credentials = file("GCP-SA-stage")
 }
