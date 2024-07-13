@@ -23,7 +23,7 @@ pipeline {
                     echo "Selected environment GEO: ${GEO_ENV}"
                 }
                 withCredentials([file(credentialsId: "${ENVIRONMENT}", variable: 'GOOGLE_CREDENTIALS'),
-                                 file(credentialsId: 'GCP-SA-stage', variable: 'TF_VAR_GOOGLE_APPLICATIONS_CREDENTIALS')]) {
+                                 file(credentialsId: 'GCP-SA-stage', variable: 'GOOGLE_APPLICATIONS_CREDENTIALS')]) {
                     dir('terraform/environments') {
                         sh 'printenv | sort'
                         sh 'make plan'
