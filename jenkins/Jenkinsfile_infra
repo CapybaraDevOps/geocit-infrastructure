@@ -26,7 +26,7 @@ pipeline {
                                  file(credentialsId: 'GCP-SA-stage', variable: 'GOOGLE_CLOUD_KEYFILE_JSON')]) {
                     dir('terraform/environments') {
                         writeFile file: 'sa.json', text: GOOGLE_CLOUD_KEYFILE_JSON
-                        sh "echo ${WORKSPACE}"
+                        sh 'printenv | sort'
                         sh 'ls -al'
                         sh 'make plan'
                     }
