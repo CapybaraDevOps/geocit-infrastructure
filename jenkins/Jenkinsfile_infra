@@ -23,7 +23,7 @@ pipeline {
                     echo "Selected environment GEO: ${GEO_ENV}"
                 }
                 withCredentials([file(credentialsId: "${ENVIRONMENT}", variable: 'GOOGLE_CREDENTIALS'),
-                                 file(credentialsId: 'GCP-SA-stage', variable: 'GOOGLE_CREDENTIALS_FILE')]) {
+                                 file(credentialsId: 'GCP-SA-stage', variable: 'GOOGLE_CLOUD_KEYFILE_JSON')]) {
                     dir('terraform/environments') {
                         writeFile file: 'sa.json', text: GOOGLE_CREDENTIALS_FILE
                         sh "echo ${WORKSPACE}"
