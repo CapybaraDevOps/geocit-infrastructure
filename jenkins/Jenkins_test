@@ -14,7 +14,7 @@ pipeline {
     environment {
         // ENVIRONMENT = "GCP-SA-${params.ENV}"
         GOOGLE_APPLICATION_CREDENTIALS = credentials("GCP-SA-${params.ENV}")
-        GOOGLE_CLOUD_KEYFILE_JSON = credentials('GCP-SA-stage')
+        GOOGLE_APPLICATION_CREDENTIALS_STAGE = credentials('GCP-SA-stage')
         GEO_ENV = "${params.ENV}-${params.ENV_VARIABLE}-${params.REGION}-${params.ZONE}-${params.PROJECT_NAME}"
         TF_VAR_GEO_ENV = "${params.ENV}-${params.ENV_VARIABLE}-${params.REGION}-${params.ZONE}"
     }
@@ -25,8 +25,8 @@ pipeline {
                     echo "Selected environment GEO: ${GEO_ENV}"
                 }
                     dir('terraform/environments') {
-                        // sh "export GOOGLE_APPLICATION_CREDENTIALS=${GOOGLE_CLOUD_KEYFILE_JSON}"
-                        sh "echo ${GOOGLE_APPLICATION_CREDENTIALS}"
+                        // sh "export GOOGLE_APPLICATION_CREDENTIALS=${GOOGLE_APPLICATION_CREDENTIALS_STAGE}"
+                        sh "echo ${GOOGLE_APPLICATION_CREDENTIALS_STAGE}"
                         sh 'printenv | sort'
                         sh 'gcloud auth list'
                         sh 'gcloud projects list'
