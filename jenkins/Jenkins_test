@@ -12,8 +12,8 @@ pipeline {
         string(name: 'PROJECT_NAME', defaultValue: 'geo', description: 'Project name')
     }
     environment {
-        ENVIRONMENT = "GCP-SA-${params.ENV}"
-        GOOGLE_APPLICATION_CREDENTIALS = credentials("${ENVIRONMENT}")
+        // ENVIRONMENT = "GCP-SA-${params.ENV}"
+        GOOGLE_APPLICATION_CREDENTIALS = credentials("GCP-SA-${params.ENV}")
         GOOGLE_CLOUD_KEYFILE_JSON = credentials('GCP-SA-stage')
         GEO_ENV = "${params.ENV}-${params.ENV_VARIABLE}-${params.REGION}-${params.ZONE}-${params.PROJECT_NAME}"
         TF_VAR_GEO_ENV = "${params.ENV}-${params.ENV_VARIABLE}-${params.REGION}-${params.ZONE}"
