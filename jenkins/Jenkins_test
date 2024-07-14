@@ -29,7 +29,7 @@ pipeline {
                         sh "echo ${GOOGLE_APPLICATION_CREDENTIALS_STAGE}"
                         sh 'printenv | sort | grep GOOGLE'
                         sh 'gcloud auth list'
-                        sh 'gcloud projects list'
+                        // sh 'gcloud projects list'
                         sh 'ls -al'
                         sh 'make plan'
                     }
