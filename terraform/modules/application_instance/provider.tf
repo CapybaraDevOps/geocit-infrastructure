@@ -11,9 +11,9 @@ provider "google-beta" {
 }
 
 provider "google" {
-  project = "capybara-stage"
-  region  = var.region
-  zone    = var.zone
-  alias   = "stage"
-  # credentials = var.GOOGLE_CLOUD_KEYFILE_JSON
+  project     = "capybara-stage"
+  region      = var.region
+  zone        = var.zone
+  alias       = "stage"
+  credentials = var.GOOGLE_CLOUD_KEYFILE_JSON
 }
