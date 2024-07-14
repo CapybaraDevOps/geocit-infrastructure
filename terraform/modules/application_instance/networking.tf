@@ -22,6 +22,7 @@ resource "google_compute_network_peering" "awx-app" {
   network      = data.google_compute_network.awx-network.self_link
   peer_network = google_compute_network.app-network.self_link
   provider     = google.stage
+  depends_on   = [google_compute_network.app-network, google_compute_subnetwork.default, google_compute_network_peering.app-awx]
 }
 
 resource "google_compute_firewall" "fw_ilb_to_backends" {
