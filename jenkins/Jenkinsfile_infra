@@ -22,7 +22,8 @@ pipeline {
                 script {
                     echo "Selected environment GEO: ${GEO_ENV}"
                 }
-                withCredentials([file(credentialsId: "${ENVIRONMENT}", variable: 'GOOGLE_CREDENTIALS')]) {
+                withCredentials([file(credentialsId: "${ENVIRONMENT}", variable: 'GOOGLE_CREDENTIALS')],
+                file(credentialsId: 'GCP-SA-stage', variable: 'GOOGLE_CLOUD_KEYFILE_JSON')) {
                     dir('terraform/environments') {
                         sh 'printenv | sort | grep GOOGLE'
                         sh 'gcloud auth list'
