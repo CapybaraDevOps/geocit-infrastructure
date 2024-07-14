@@ -48,7 +48,7 @@ variable "env" {
   type        = string
 }
 
-variable "GOOGLE_CLOUD_KEYFILE_JSON" {
-  description = "Credentials to awx-network"
-  sensitive   = true
-}
+# variable "GOOGLE_CLOUD_KEYFILE_JSON" {
+#   description = "Credentials to awx-network"
+#   sensitive   = true
+# }
