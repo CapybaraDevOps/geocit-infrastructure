@@ -11,9 +11,9 @@ provider "google-beta" {
 }
 
 provider "google" {
-  project = "capybara-stage"
-  region  = var.region
-  zone    = var.zone
-  alias   = "stage"
-  # credentials = file("${GOOGLE_CLOUD_KEYFILE_JSON}/terraform/environments/sa.json")
+  project     = "capybara-stage"
+  region      = var.region
+  zone        = var.zone
+  alias       = "stage"
+  credentials = GOOGLE_CLOUD_KEYFILE_JSON
 }
