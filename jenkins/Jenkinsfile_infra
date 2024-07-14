@@ -25,7 +25,7 @@ pipeline {
                 withCredentials([file(credentialsId: "${ENVIRONMENT}", variable: 'GOOGLE_CREDENTIALS'),
                                  file(credentialsId: 'GCP-SA-stage', variable: 'GOOGLE_CLOUD_KEYFILE_JSON')]) {
                     dir('terraform/environments') {
-                        writeFile file: 'sa.json', text: GOOGLE_CREDENTIALS_FILE
+                        writeFile file: 'sa.json', text: GOOGLE_CLOUD_KEYFILE_JSON
                         sh "echo ${WORKSPACE}"
                         sh 'ls -al'
                         sh 'make plan'
