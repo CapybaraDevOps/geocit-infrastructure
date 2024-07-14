@@ -20,13 +20,6 @@ pipeline {
     }
     stages {
         stage('Init and Plan') {
-            input {
-                message 'Do you want to apply infrastructure?'
-                ok 'Apply'
-                parameters {
-                    booleanParam defaultValue: false, description: 'Do you really want to apply infrastructure (By default "No" )?', name: 'APPLY'
-                }
-            }
             steps {
                 script {
                     echo "Selected environment GEO: ${GEO_ENV}"
@@ -38,6 +31,7 @@ pipeline {
                         sh 'gcloud auth list'
                         sh 'gcloud projects list'
                         sh 'ls -al'
+                        sh 'sleep 60'
                         sh 'make plan'
                     }
                 }
