@@ -47,3 +47,8 @@ variable "env" {
   description = "Environment to deploy"
   type        = string
 }
+
+variable "GOOGLE_CLOUD_KEYFILE_JSON" {
+  description = "Credentials to awx-network"
+  sensitive   = true
+}
