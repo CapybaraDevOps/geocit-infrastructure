@@ -21,7 +21,7 @@ resource "google_compute_network_peering" "awx-app" {
   name         = "awx-app-${var.env}"
   network      = data.google_compute_network.awx-network.self_link
   peer_network = google_compute_network.app-network.self_link
-  provider     = google.stage
+  # provider     = google.stage
 }
 
 resource "google_compute_firewall" "fw_ilb_to_backends" {
