@@ -5,7 +5,7 @@ resource "google_compute_network" "app-network" {
 
 resource "google_compute_subnetwork" "default" {
   name                     = "app-subnetwork-${var.env}"
-  ip_cidr_range            = "10.102.0.0/20"
+  ip_cidr_range            = var.subnetwork
   region                   = var.region
   private_ip_google_access = true
   network                  = google_compute_network.app-network.id

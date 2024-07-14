@@ -30,4 +30,5 @@ inputs = {
   machine_type  = "e2-micro"
   custom_labels = {}
   enable_ssl    = false
+  subnetwork = "10.100.0.0/20"
 }

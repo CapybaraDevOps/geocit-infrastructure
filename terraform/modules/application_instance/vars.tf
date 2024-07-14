@@ -52,3 +52,8 @@ variable "GOOGLE_APPLICATION_CREDENTIALS" {
   description = "Credentials to awx-network"
   sensitive   = true
 }
+
+variable "subnetwork" {
+  description = "subnetwork for applications"
+  type        = string
+}

@@ -30,4 +30,5 @@ inputs = {
   machine_type  = "e2-medium"
   custom_labels = {}
   enable_ssl    = false
+  subnetwork = "10.102.0.0/20"
 }
