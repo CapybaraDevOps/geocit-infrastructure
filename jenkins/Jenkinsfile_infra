@@ -28,7 +28,7 @@ pipeline {
                         writeFile file: 'sa.json', text: GOOGLE_CLOUD_KEYFILE_JSON
                         sh 'printenv | sort'
                         sh 'gcloud auth list'
-                        sg 'gcloud projects list'
+                        sh 'gcloud projects list'
                         sh 'ls -al'
                         sh 'make plan'
                     }
