@@ -25,6 +25,8 @@ pipeline {
                     echo "Selected environment GEO: ${GEO_ENV}"
                 }
                     dir('terraform/environments') {
+                        sh 'export GOOGLE_CREDENTIALS=$GOOGLE_CLOUD_KEYFILE_JSON'
+                        sh "echo $GOOGLE_CREDENTIALS"
                         sh 'printenv | sort'
                         sh 'gcloud auth list'
                         sh 'gcloud projects list'
