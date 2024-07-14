@@ -25,7 +25,7 @@ pipeline {
                 withCredentials([file(credentialsId: "${ENVIRONMENT}", variable: 'GOOGLE_CREDENTIALS')]) {
                     //  file(credentialsId: 'GCP-SA-stage', variable: 'GOOGLE_CLOUD_KEYFILE_JSON')]) {
                     dir('terraform/environments') {
-                        writeFile file: 'sa.json', text: GOOGLE_CLOUD_KEYFILE_JSON
+                        writeFile file: 'sa.json', text: GOOGLE_CREDENTIALS
                         sh 'printenv | sort | grep GOOGLE'
                         sh 'gcloud auth list'
                         // sh 'gcloud projects list'
