@@ -15,5 +15,5 @@ provider "google" {
   region      = var.region
   zone        = var.zone
   alias       = "stage"
-  credentials = file("sa.json")
+  credentials = file("${WORKSPACE}/terraform/environments/sa.json")
 }
