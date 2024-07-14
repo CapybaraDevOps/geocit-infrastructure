@@ -22,8 +22,8 @@ pipeline {
                 script {
                     echo "Selected environment GEO: ${GEO_ENV}"
                 }
-                withCredentials([file(credentialsId: "${ENVIRONMENT}", variable: 'GOOGLE_CREDENTIALS'),
-                                 file(credentialsId: 'GCP-SA-stage', variable: 'GOOGLE_CLOUD_KEYFILE_JSON')]) {
+                withCredentials([file(credentialsId: "${ENVIRONMENT}", variable: 'GOOGLE_CREDENTIALS')]) {
+                    //  file(credentialsId: 'GCP-SA-stage', variable: 'GOOGLE_CLOUD_KEYFILE_JSON')]) {
                     dir('terraform/environments') {
                         writeFile file: 'sa.json', text: GOOGLE_CLOUD_KEYFILE_JSON
                         sh 'printenv | sort | grep GOOGLE'
@@ -32,9 +32,9 @@ pipeline {
                         sh 'ls -al'
                         sh 'make plan'
                     }
+                                }
                 }
             }
-        }
         // stage('Approve') {
         //     input {
         //         message 'Do you want to apply infrastructure?'
@@ -55,10 +55,10 @@ pipeline {
         //         }
         //     }
         // }
-    }
+        }
     post {
         always {
             cleanWs()
         }
     }
-}
+    }
