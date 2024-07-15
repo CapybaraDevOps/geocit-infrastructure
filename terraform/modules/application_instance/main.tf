@@ -10,7 +10,7 @@ resource "google_compute_instance_template" "appserver" {
 
   network_interface {
     network    = google_compute_network.app-network.id
-    subnetwork = google_compute_subnetwork.default.id
+    subnetwork = google_compute_subnetwork.app-subnetwork.id
   }
 
   metadata = {

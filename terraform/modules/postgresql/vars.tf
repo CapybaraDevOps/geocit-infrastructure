@@ -21,6 +21,10 @@ variable "instance_name" {
   default     = "postgres-db"
 }
 
+variable "app-subnetwork" {
+  description = "Subnetwork for application"
+}
+
 variable "env" {
   type        = string
   description = "Current environment to deploy"
@@ -35,4 +39,8 @@ variable "zone" {
   type        = string
   description = "region for DB"
   default     = "europe-west3-c"
+}
+
+variable "app-vpc" {
+  description = "Network for application"
 }

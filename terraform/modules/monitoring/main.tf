@@ -1,3 +1,5 @@
+
+
 resource "google_compute_instance" "grafana" {
   name                      = var.name
   machine_type              = var.machine_type
@@ -15,7 +17,8 @@ resource "google_compute_instance" "grafana" {
   }
 
   network_interface {
-    network = "default"
+    network    = var.app-vpc
+    subnetwork = var.app-subnetwork
 
     access_config {
       // Ephemeral public IP

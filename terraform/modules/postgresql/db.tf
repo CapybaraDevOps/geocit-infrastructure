@@ -15,7 +15,8 @@ resource "google_sql_database_instance" "main" {
     disk_autoresize   = "true"
     ip_configuration {
       ipv4_enabled    = "false"
-      private_network = data.google_compute_network.default.id
+      private_network = var.app-vpc
+      # private_network = data.google_compute_network.default.id
     }
   }
 }
