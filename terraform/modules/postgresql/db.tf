@@ -15,7 +15,7 @@ resource "google_sql_database_instance" "main" {
     disk_autoresize   = "true"
     ip_configuration {
       ipv4_enabled    = "false"
-      private_network = var.app-vpc
+      private_network = var.app-vpc-id
       # private_network = data.google_compute_network.default.id
     }
   }
@@ -31,4 +31,9 @@ resource "google_sql_user" "postgres" {
   instance   = google_sql_database_instance.main.name
   password   = google_secret_manager_secret_version.db_password_version.secret_data
   depends_on = [google_secret_manager_secret_version.db_password_version]
+}
+
+output "db" {
+  value = google_sql_database_instance.main.settings[0].ip_configuration
+  # sensitive = true
 }

@@ -44,3 +44,7 @@ variable "zone" {
 variable "app-vpc" {
   description = "Network for application"
 }
+
+variable "app-vpc-id" {
+  description = "Network id for application"
+}

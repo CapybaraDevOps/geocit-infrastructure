@@ -23,6 +23,7 @@ dependency "application_instance" {
   mock_outputs = {
     app-vpc = "fake-vpc"
     app-subnetwork = "fake-subnetwork"
+    app-vpc-id = "projects/capybara-stage/global/networks/default"
   }
 }
 
@@ -41,5 +42,5 @@ inputs = {
   env           = "stage-01"
   app-subnetwork = dependency.application_instance.outputs.app-subnetwork
   app-vpc = dependency.application_instance.outputs.app-vpc
-  
+  app-vpc-id = dependency.application_instance.outputs.app-vpc-id
 }

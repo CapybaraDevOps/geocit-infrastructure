@@ -8,6 +8,12 @@ output "app-vpc" {
   value       = google_compute_network.app-network.name
 }
 
+output "app-vpc-id" {
+  description = "Network for application"
+  value       = google_compute_network.app-network.id
+}
+
+
 output "app-subnetwork" {
   description = "Subnetwork for application"
   value       = google_compute_subnetwork.app-subnetwork.name
