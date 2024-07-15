@@ -25,13 +25,9 @@ pipeline {
                 withCredentials([file(credentialsId: "${ENVIRONMENT}", variable: 'GOOGLE_CREDENTIALS'),
                                  file(credentialsId: 'GCP-SA-stage', variable: 'TF_VAR_GOOGLE_APPLICATION_CREDENTIALS')]) {
                     dir('terraform/environments') {
-                        // sh 'printenv | sort | grep GOOGLE'
-                        // sh 'gcloud auth list'
-                        // sh 'gcloud projects list'
-                        // sh 'ls -al'
                         sh 'make plan'
                     }
-                                 }
+                }
             }
         }
         stage('Approve') {
@@ -46,12 +42,9 @@ pipeline {
                 withCredentials([file(credentialsId: "${ENVIRONMENT}", variable: 'GOOGLE_CREDENTIALS'),
                              file(credentialsId: 'GCP-SA-stage', variable: 'TF_VAR_GOOGLE_APPLICATION_CREDENTIALS')]) {
                     dir('terraform/environments') {
-                        // writeFile file: 'sa.json', text: GOOGLE_CREDENTIALS_FILE
-                        // sh 'cat sa.json'
-                        // sh 'ls -al'
                         sh 'make apply'
                     }
-                             }
+                }
             }
         }
     }
