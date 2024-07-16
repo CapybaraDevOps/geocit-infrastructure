@@ -7,7 +7,7 @@ pipeline {
     }
     parameters {
         choice(name: 'ENV', choices: ['dev', 'stage', 'prod'], description: 'Deployment environment')
-        choice(name: 'ENV_VARIABLE', defaultValue: '01', description: 'ENV Variable')
+        string(name: 'ENV_VARIABLE', defaultValue: '01', description: 'ENV Variable')
         choice(name: 'REGION', choices: ['europe', 'us'], description: 'Select the region')
         choice(name: 'ZONE', choices: ['west3', 'east5'], description: 'Select the zone')
         string(name: 'BUILDNAME', defaultValue: 'citizen', description: 'Build Name')
