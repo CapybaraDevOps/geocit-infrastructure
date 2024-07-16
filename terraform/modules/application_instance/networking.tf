@@ -29,7 +29,7 @@ resource "google_compute_firewall" "fw_ilb_to_backends" {
   name          = "${var.env}-${var.region}-fw-allow-ilb-to-backends"
   direction     = "INGRESS"
   network       = google_compute_network.app-network.id
-  source_ranges = concat(["10.0.0.0/8", "35.235.240.0/20"], data.google_netblock_ip_ranges.netblock.cidr_blocks_ipv4)
+  source_ranges = concat(["10.0.0.0/8", "35.235.240.0/20", "35.191.0.0/16", "130.211.0.0/22"], data.google_netblock_ip_ranges.netblock.cidr_blocks_ipv4)
   target_tags   = ["http-server"]
   allow {
     protocol = "tcp"
