@@ -88,24 +88,24 @@ pipeline {
                 }
             }
         }
-        // stage('Build Back-end') {
-        //     steps {
-        //         sh 'mvn clean package -Dmaven.test.skip=true'
-        //     }
-        // }
-        // stage('Test Back-end') {
-        //     steps {
-        //         sh 'mvn test'
-        //     }
-        // }
-        // stage('Artifactory') {
-        //     steps {
-        //         script {
-        //             jf "rt u ${WORKSPACE}/target/citizen.war ${repo}/${buildName}.war"
-        //             jf 'rt bp'
-        //         }
-        //     }
-        // }
+        stage('Build Back-end') {
+            steps {
+                sh 'mvn clean package -Dmaven.test.skip=true'
+            }
+        }
+        stage('Test Back-end') {
+            steps {
+                sh 'mvn test'
+            }
+        }
+        stage('Artifactory') {
+            steps {
+                script {
+                    jf "rt u ${WORKSPACE}/target/citizen.war ${repo}/${buildName}.war"
+                    jf 'rt bp'
+                }
+            }
+        }
     }
     post {
         always {
