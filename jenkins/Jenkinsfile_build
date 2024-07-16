@@ -27,6 +27,28 @@ pipeline {
                     }
                 }
         }
+        stage('For prod environment') {
+            when {
+                environment ignoreCase: true, name: 'ENV', value: 'prod'
+            }
+            steps {
+                script {
+                    env.domen = 'https://capybara.pp.ua'
+                }
+            }
+        }
+        stage('For dev or stage environments') {
+            when {
+                not {
+                    environment ignoreCase: true, name: 'ENV', value: 'prod'
+                }
+            }
+            steps {
+                script {
+                    env.domen = "https://${ENV}.capybara.pp.ua"
+                }
+            }
+        }
         stage('Check IP') {
             steps {
                 withCredentials([file(credentialsId: "${ENVIRONMENT}", variable: 'GOOGLE_CREDENTIALS')]) {
@@ -49,9 +71,9 @@ pipeline {
                         def json = readJSON file: "${CREDENTIALS_FILE}"
                         appProp = 'src/main/resources/application.properties'
                         app_js = 'src/main/webapp/static/js/app.*.js'
-                        sh "sed -i 's|http://localhost:8080|https://capybara.pp.ua|g' ${appProp}"
+                        sh "sed -i 's|http://localhost:8080|${domen}|g' ${appProp}"
                         sh "sed -i 's|localhost:5432|${postgresIP}:5432|g' ${appProp}"
-                        sh "sed -i 's|http://localhost:8080|https://capybara.pp.ua|g' ${app_js}"
+                        sh "sed -i 's|http://localhost:8080|${domen}|g' ${app_js}"
 
                         sh "sed -i 's|^db.username=.*|db.username=${json.db.username}|' ${appProp}"
                         sh "sed -i 's|^db.password=.*|db.password=${dbPassword}|' ${appProp}"
@@ -66,24 +88,24 @@ pipeline {
                 }
             }
         }
-        stage('Build Back-end') {
-            steps {
-                sh 'mvn clean package -Dmaven.test.skip=true'
-            }
-        }
-        stage('Test Back-end') {
-            steps {
-                sh 'mvn test'
-            }
-        }
-        stage('Artifactory') {
-            steps {
-                script {
-                    jf "rt u ${WORKSPACE}/target/citizen.war ${repo}/${buildName}.war"
-                    jf 'rt bp'
-                }
-            }
-        }
+        // stage('Build Back-end') {
+        //     steps {
+        //         sh 'mvn clean package -Dmaven.test.skip=true'
+        //     }
+        // }
+        // stage('Test Back-end') {
+        //     steps {
+        //         sh 'mvn test'
+        //     }
+        // }
+        // stage('Artifactory') {
+        //     steps {
+        //         script {
+        //             jf "rt u ${WORKSPACE}/target/citizen.war ${repo}/${buildName}.war"
+        //             jf 'rt bp'
+        //         }
+        //     }
+        // }
     }
     post {
         always {
