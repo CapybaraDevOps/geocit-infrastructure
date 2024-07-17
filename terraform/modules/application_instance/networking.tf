@@ -1,8 +1,35 @@
+resource "google_compute_network" "app-network" {
+  name                    = "app-network-${var.env}"
+  auto_create_subnetworks = false
+}
+
+resource "google_compute_subnetwork" "app-subnetwork" {
+  name                     = "app-subnetwork-${var.env}"
+  ip_cidr_range            = var.subnetwork
+  region                   = var.region
+  private_ip_google_access = true
+  network                  = google_compute_network.app-network.id
+}
+
+resource "google_compute_network_peering" "app-awx" {
+  name         = "app-awx-${var.env}"
+  network      = google_compute_network.app-network.self_link
+  peer_network = data.google_compute_network.awx-network.self_link
+}
+
+resource "google_compute_network_peering" "awx-app" {
+  name         = "awx-app-${var.env}"
+  network      = data.google_compute_network.awx-network.self_link
+  peer_network = google_compute_network.app-network.self_link
+  provider     = google.stage
+  depends_on   = [google_compute_network.app-network, google_compute_subnetwork.app-subnetwork, google_compute_network_peering.app-awx]
+}
+
 resource "google_compute_firewall" "fw_ilb_to_backends" {
   name          = "${var.env}-${var.region}-fw-allow-ilb-to-backends"
   direction     = "INGRESS"
-  network       = data.google_compute_network.default.id
-  source_ranges = data.google_netblock_ip_ranges.netblock.cidr_blocks_ipv4
+  network       = google_compute_network.app-network.id
+  source_ranges = concat(["10.0.0.0/8", "35.235.240.0/20", "35.191.0.0/16", "130.211.0.0/22"], data.google_netblock_ip_ranges.netblock.cidr_blocks_ipv4)
   target_tags   = ["http-server"]
   allow {
     protocol = "tcp"
@@ -15,17 +42,18 @@ resource "google_compute_url_map" "urlmap" {
   description     = "URL map for ${var.env}-${var.region} load balancer"
   default_service = google_compute_backend_service.api.self_link
 }
+
 resource "google_compute_url_map" "http-redirect" {
   name = "${var.env}-${var.region}-url-map-redirect"
   default_url_redirect {
-    strip_query            = false
-    https_redirect         = true
+    strip_query    = false
+    https_redirect = true
   }
 }
 
 resource "google_compute_router" "default" {
   name    = "${var.env}-${var.region}-lb-http-router"
-  network = data.google_compute_network.default.id
+  network = google_compute_network.app-network.id
 }
 
 resource "google_compute_global_address" "global_address" {
@@ -45,14 +73,16 @@ resource "google_compute_global_forwarding_rule" "http-redirect" {
   ip_address = google_compute_global_address.global_address.address
   port_range = "80"
 }
+
 resource "google_compute_global_forwarding_rule" "https" {
   name       = "${var.env}-${var.region}-https-rule"
   target     = google_compute_target_https_proxy.https.self_link
   ip_address = google_compute_global_address.global_address.address
   port_range = "443"
   depends_on = [google_compute_global_address.global_address]
-  labels = var.custom_labels
+  labels     = var.custom_labels
 }
+
 resource "google_compute_target_https_proxy" "https" {
   name    = "${var.env}-${var.region}-https-proxy"
   url_map = google_compute_url_map.urlmap.id

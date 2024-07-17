@@ -34,3 +34,11 @@ variable "project" {
   type        = string
   description = "id of project"
 }
+
+variable "app-vpc" {
+  description = "Network for application"
+}
+
+variable "app-subnetwork" {
+  description = "Subnetwork for application"
+}

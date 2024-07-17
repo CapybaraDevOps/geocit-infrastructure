@@ -18,6 +18,19 @@ terraform {
   }
 }
 
+dependency "application_instance" {
+  config_path = "../application_instance"
+  mock_outputs = {
+    app-vpc = "fake-vpc"
+    app-subnetwork = "fake-subnetwork"
+    app-vpc-id = "projects/capybara-dev/global/networks/default"
+  }
+}
+
+dependencies {
+  paths = ["../application_instance"]
+}
+
 include {
   path = find_in_parent_folders()
 }
@@ -27,4 +40,7 @@ inputs = {
   region        = "europe-west3"
   zone          = "europe-west3-c"
   env           = "dev-01"
+  app-subnetwork = dependency.application_instance.outputs.app-subnetwork
+  app-vpc = dependency.application_instance.outputs.app-vpc
+  app-vpc-id = dependency.application_instance.outputs.app-vpc-id
 }

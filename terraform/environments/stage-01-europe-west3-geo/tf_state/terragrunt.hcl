@@ -19,7 +19,7 @@ terraform {
 }
 
 inputs = {
-  env           = "prod-01"
+  env           = "stage-01"
   region        = "europe-west3"
   project       = "capybara-stage" 
 }

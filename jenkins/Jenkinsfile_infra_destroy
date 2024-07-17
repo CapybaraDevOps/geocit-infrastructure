@@ -13,10 +13,10 @@ pipeline {
     }
     environment {
         ENVIRONMENT = "GCP-SA-${params.ENV}"
+        TF_VAR_GEO_ENV = "${params.ENV}-${params.ENV_VARIABLE}-${params.REGION}-${params.ZONE}"
         GEO_ENV = "${params.ENV}-${params.ENV_VARIABLE}-${params.REGION}-${params.ZONE}-${params.PROJECT_NAME}"
     }
     stages {
-        
         stage('Destroy') {
             input {
                 message 'Do you want to destroy infrastructure?'
@@ -26,7 +26,8 @@ pipeline {
                 }
             }
             steps {
-                withCredentials([file(credentialsId: "${ENVIRONMENT}", variable: 'GOOGLE_CREDENTIALS')]) {
+                withCredentials([file(credentialsId: "${ENVIRONMENT}", variable: 'GOOGLE_CREDENTIALS'),
+                                 file(credentialsId: 'GCP-SA-stage', variable: 'TF_VAR_GOOGLE_APPLICATION_CREDENTIALS')])  {
                     dir('terraform/environments') {
                         sh 'make destroy'
                     }

@@ -27,17 +27,40 @@ pipeline {
                     }
                 }
         }
+        stage('For prod environment') {
+            when {
+                environment ignoreCase: true, name: 'ENV', value: 'prod'
+            }
+            steps {
+                script {
+                    env.domen = 'https://capybara.pp.ua'
+                }
+            }
+        }
+        stage('For dev or stage environments') {
+            when {
+                not {
+                    environment ignoreCase: true, name: 'ENV', value: 'prod'
+                }
+            }
+            steps {
+                script {
+                    env.domain = "https://${ENV}.capybara.pp.ua"
+                }
+            }
+        }
         stage('Check IP') {
             steps {
                 withCredentials([file(credentialsId: "${ENVIRONMENT}", variable: 'GOOGLE_CREDENTIALS')]) {
-                      script{
+                    script {
                             sh 'gcloud auth activate-service-account --key-file=$GOOGLE_CREDENTIALS'
-                            def projectId = sh(script: "gcloud projects list --format='table(projectId)' | grep capybara", returnStdout: true).trim() 
+                            def projectId = sh(script: "gcloud projects list --format='table(projectId)' | grep capybara", returnStdout: true).trim()
                             sh "gcloud config set project ${projectId}"
                             def secretName = sh(script: "gcloud secrets list --filter='name:geo-database-credentials' --format='value(name)'", returnStdout: true).trim()
                             env.dbPassword = sh(script: "gcloud secrets versions access latest --secret=${secretName} --project=${projectId}", returnStdout: true).trim()
-                            env.postgresIP = sh(script: "gcloud sql instances describe $ENV-$ENV_VARIABLE-$REGION-$ZONE-postgres-db  --project=${projectId} --format='value(ipAddresses.ipAddress)'")
-                      }
+                            env.postgresIP = sh(script: "gcloud sql instances describe $ENV-$ENV_VARIABLE-$REGION-$ZONE-postgres-db  --project=${projectId} --format='value(ipAddresses.ipAddress)'", returnStdout: true).trim()
+                            sh "echo $postgresIP"
+                    }
                 }
             }
         }
@@ -48,9 +71,9 @@ pipeline {
                         def json = readJSON file: "${CREDENTIALS_FILE}"
                         appProp = 'src/main/resources/application.properties'
                         app_js = 'src/main/webapp/static/js/app.*.js'
-                        sh "sed -i 's|http://localhost:8080|https://capybara.pp.ua|g' $appProp"
-                        sh "sed -i 's|localhost:5432|$postgresIP:5432|g' $appProp"
-                        sh "sed -i 's|http://localhost:8080|https://capybara.pp.ua|g' $app_js"
+                        sh "sed -i 's|http://localhost:8080|${domain}|g' ${appProp}"
+                        sh "sed -i 's|localhost:5432|${postgresIP}:5432|g' ${appProp}"
+                        sh "sed -i 's|http://localhost:8080|${domain}|g' ${app_js}"
 
                         sh "sed -i 's|^db.username=.*|db.username=${json.db.username}|' ${appProp}"
                         sh "sed -i 's|^db.password=.*|db.password=${dbPassword}|' ${appProp}"

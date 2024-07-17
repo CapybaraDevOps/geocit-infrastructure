@@ -27,7 +27,8 @@ inputs = {
   region        = "europe-west3"
   zone          = "europe-west3-c"
   env           = "stage-01"
-  machine_type  = "e2-micro"
+  machine_type  = "e2-medium"
   custom_labels = {}
   enable_ssl    = false
+  subnetwork = "10.101.0.0/20"
 }

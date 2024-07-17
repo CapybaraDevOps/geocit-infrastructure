@@ -1,13 +1,15 @@
+
+
 resource "google_compute_instance" "grafana" {
-  name         = var.name
-  machine_type = var.machine_type
-  zone         = var.zone
-  tags         = ["grafana"]
+  name                      = var.name
+  machine_type              = var.machine_type
+  zone                      = var.zone
+  tags                      = ["grafana"]
   allow_stopping_for_update = true
-  service_account {
-    email  = "dev-42@capybara-dev-42069.iam.gserviceaccount.com"
-    scopes = ["cloud-platform"]
-  }
+  # service_account {
+  #   email  = "dev-42@capybara-dev-42069.iam.gserviceaccount.com"
+  #   scopes = ["cloud-platform"]
+  # }
   boot_disk {
     initialize_params {
       image = var.image
@@ -15,7 +17,8 @@ resource "google_compute_instance" "grafana" {
   }
 
   network_interface {
-    network = "default"
+    network    = var.app-vpc
+    subnetwork = var.app-subnetwork
 
     access_config {
       // Ephemeral public IP

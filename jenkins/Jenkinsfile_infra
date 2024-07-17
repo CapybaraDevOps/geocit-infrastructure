@@ -14,6 +14,7 @@ pipeline {
     environment {
         ENVIRONMENT = "GCP-SA-${params.ENV}"
         GEO_ENV = "${params.ENV}-${params.ENV_VARIABLE}-${params.REGION}-${params.ZONE}-${params.PROJECT_NAME}"
+        TF_VAR_GEO_ENV = "${params.ENV}-${params.ENV_VARIABLE}-${params.REGION}-${params.ZONE}"
     }
     stages {
         stage('Init and Plan') {
@@ -21,9 +22,10 @@ pipeline {
                 script {
                     echo "Selected environment GEO: ${GEO_ENV}"
                 }
-                withCredentials([file(credentialsId: "${ENVIRONMENT}", variable: 'GOOGLE_CREDENTIALS')]) {
+                withCredentials([file(credentialsId: "${ENVIRONMENT}", variable: 'GOOGLE_CREDENTIALS'),
+                                 file(credentialsId: 'GCP-SA-stage', variable: 'TF_VAR_GOOGLE_APPLICATION_CREDENTIALS')]) {
                     dir('terraform/environments') {
-                        sh "make plan"
+                        sh 'make plan'
                     }
                 }
             }
@@ -37,9 +39,10 @@ pipeline {
                 }
             }
             steps {
-                withCredentials([file(credentialsId: "${ENVIRONMENT}", variable: 'GOOGLE_CREDENTIALS')]) {
+                withCredentials([file(credentialsId: "${ENVIRONMENT}", variable: 'GOOGLE_CREDENTIALS'),
+                             file(credentialsId: 'GCP-SA-stage', variable: 'TF_VAR_GOOGLE_APPLICATION_CREDENTIALS')]) {
                     dir('terraform/environments') {
-                        sh "make apply"
+                        sh 'make apply'
                     }
                 }
             }
