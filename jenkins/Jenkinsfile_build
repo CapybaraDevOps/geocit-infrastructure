@@ -33,7 +33,7 @@ pipeline {
             }
             steps {
                 script {
-                    env.domen = 'https://capybara.pp.ua'
+                    env.domen = 'https://geo.capybara.pp.ua'
                 }
             }
         }
