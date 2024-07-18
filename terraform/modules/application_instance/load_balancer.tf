@@ -22,7 +22,7 @@ resource "google_compute_autoscaler" "api" {
 
   autoscaling_policy {
     max_replicas    = 3
-    min_replicas    = 1
+    min_replicas    = 2
     cooldown_period = 60
 
     cpu_utilization {
