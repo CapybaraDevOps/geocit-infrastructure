@@ -1,10 +1,10 @@
 resource "google_compute_backend_service" "api" {
-  name        = "${var.env}-${var.region}-api"
-  description = "API Backend for ${var.env}-${var.region} load balancer"
-  protocol    = "HTTP"
-  timeout_sec = 10
-  enable_cdn  = false
-  session_affinity    = "CLIENT_IP"
+  name             = "${var.env}-${var.region}-api"
+  description      = "API Backend for ${var.env}-${var.region} load balancer"
+  protocol         = "HTTP"
+  timeout_sec      = 10
+  enable_cdn       = false
+  session_affinity = "CLIENT_IP"
 
   backend {
     group           = google_compute_instance_group_manager.api.instance_group
@@ -22,7 +22,7 @@ resource "google_compute_autoscaler" "api" {
 
   autoscaling_policy {
     max_replicas    = 3
-    min_replicas    = 3
+    min_replicas    = 2
     cooldown_period = 60
 
     cpu_utilization {
